@@ -40,7 +40,9 @@ def plot_predictions(model, X_train, Y_train, title="Model predictions"):
     coords = np.array((x, y)).T.reshape((-1, 2))
     plt.gca().set_aspect("equal", adjustable="box")
     plt.title(title)
-    plt.contourf(y, x, model.predict(coords).reshape(x.shape), cmap=plt.cm.coolwarm)
+    plt.contourf(
+        y, x, model.predict(coords)[:, 1].reshape(x.shape), cmap=plt.cm.coolwarm
+    )
     for clazz, color in zip([0, 1], ["blue", "red"]):
-        points_idx = Y_train == clazz
+        points_idx = np.argmax(Y_train, axis=1) == clazz
         plt.scatter(X_train[points_idx, 0], X_train[points_idx, 1], color=color, s=3)
