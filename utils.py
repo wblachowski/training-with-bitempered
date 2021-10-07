@@ -18,8 +18,8 @@ def plot_points(points_list, r):
     axis_lim = r * 1.2
     plt.xlim(-axis_lim, axis_lim)
     plt.ylim(-axis_lim, axis_lim)
-    plt.gca().set_aspect('equal', adjustable='box')
-    for points, color in zip(points_list, ['blue', 'red']):
+    plt.gca().set_aspect("equal", adjustable="box")
+    for points, color in zip(points_list, ["blue", "red"]):
         plt.scatter(points[:, 0], points[:, 1], color=color, s=3)
 
 
@@ -33,3 +33,14 @@ def mix(a, b, r1, r2, fraction):
         temp = np.copy(a[i])
         a[i] = b[j]
         b[j] = temp
+
+
+def plot_predictions(model, X_train, Y_train, title="Model predictions"):
+    x, y = np.meshgrid(np.arange(-10, 10.4, 0.4), np.arange(-10, 10.4, 0.4))
+    coords = np.array((x, y)).T.reshape((-1, 2))
+    plt.gca().set_aspect("equal", adjustable="box")
+    plt.title(title)
+    plt.contourf(y, x, model.predict(coords).reshape(x.shape), cmap=plt.cm.coolwarm)
+    for clazz, color in zip([0, 1], ["blue", "red"]):
+        points_idx = Y_train == clazz
+        plt.scatter(X_train[points_idx, 0], X_train[points_idx, 1], color=color, s=3)
