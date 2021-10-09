@@ -9,7 +9,7 @@ from scipy.special import softmax
 
 def generate_points(n, r1, r2):
     points = []
-    for i in range(n):
+    for _ in range(n):
         d = random.uniform(r1, r2)
         a = math.radians(random.randint(0, 360))
         points.append([d * math.sin(a), d * math.cos(a)])
