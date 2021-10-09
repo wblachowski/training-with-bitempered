@@ -3,6 +3,8 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import Normalize
+from scipy.special import softmax
 
 
 def generate_points(n, r1, r2):
@@ -41,7 +43,11 @@ def plot_predictions(model, X_train, Y_train, title="Model predictions"):
     plt.gca().set_aspect("equal", adjustable="box")
     plt.title(title)
     plt.contourf(
-        y, x, model.predict(coords)[:, 1].reshape(x.shape), cmap=plt.cm.coolwarm
+        x,
+        y,
+        softmax(model.predict(coords), axis=1)[:, 1].reshape(x.shape),
+        cmap=plt.cm.coolwarm,
+        norm=Normalize(vmin=0, vmax=1, clip=True),
     )
     for clazz, color in zip([0, 1], ["blue", "red"]):
         points_idx = np.argmax(Y_train, axis=1) == clazz
