@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import Normalize
 from scipy.special import softmax
+from keras.utils import np_utils
 
 
 def generate_points(n, r1, r2):
@@ -16,13 +17,20 @@ def generate_points(n, r1, r2):
     return np.array(points)
 
 
+def points_to_data(blue, red):
+    X = np.concatenate((blue, red))
+    y = np.concatenate((np.full(len(blue), 0), np.full(len(red), 1)))
+    y = np_utils.to_categorical(y)
+    return X, y
+
+
 def plot_points(points_list, r):
     axis_lim = r * 1.2
     plt.xlim(-axis_lim, axis_lim)
     plt.ylim(-axis_lim, axis_lim)
     plt.gca().set_aspect("equal", adjustable="box")
     for points, color in zip(points_list, ["blue", "red"]):
-        plt.scatter(points[:, 0], points[:, 1], color=color, s=3)
+        plt.scatter(points[:, 0], points[:, 1], color=color, s=6)
 
 
 def mix(a, b, r1, r2, fraction):
