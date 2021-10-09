@@ -8,6 +8,20 @@ from scipy.special import softmax
 from keras.utils import np_utils
 
 
+CIFAR_LABELS = {
+    0: "airplane",
+    1: "automobile",
+    2: "bird",
+    3: "cat",
+    4: "deer",
+    5: "dog",
+    6: "frog",
+    7: "horse",
+    8: "ship",
+    9: "truck",
+}
+
+
 def generate_points(n, r1, r2):
     points = []
     for _ in range(n):
@@ -33,7 +47,21 @@ def plot_points(points_list, r):
         plt.scatter(points[:, 0], points[:, 1], color=color, s=6)
 
 
-def mix(a, b, r1, r2, fraction):
+def plot_cifar(X, y, size=8):
+    plt.figure(figsize=(15, 5))
+    y = y.flatten()
+    idx = np.random.permutation(len(X))[:size]
+    X_sample = X[idx]
+    y_sample = y[idx]
+    for i, (im, label) in enumerate(zip(X_sample, y_sample)):
+        plt.subplot(1, size, i + 1)
+        plt.axis("off")
+        plt.title(CIFAR_LABELS[label])
+        plt.imshow(im)
+    plt.show()
+
+
+def mix_points(a, b, r1, r2, fraction):
     a_indx = [i for i, x in enumerate(a) if r1 <= np.linalg.norm(x) <= r2]
     b_indx = [i for i, x in enumerate(b) if r1 <= np.linalg.norm(x) <= r2]
 
@@ -43,6 +71,13 @@ def mix(a, b, r1, r2, fraction):
         temp = np.copy(a[i])
         a[i] = b[j]
         b[j] = temp
+
+
+def mix_cifar(y, percentage):
+    y_mixed = np.copy(y)
+    idx = np.random.permutation(len(y))[: int(percentage * len(y))]
+    y_mixed[idx] = (y_mixed[idx] + np.random.randint(1, 10)) % 10
+    return y_mixed, idx
 
 
 def plot_predictions(model, X_train, Y_train, title="Model predictions"):
