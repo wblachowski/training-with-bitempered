@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import Normalize
 from scipy.special import softmax
-from keras.utils import np_utils
-
+from tensorflow.keras.utils import to_categorical
 
 CIFAR_LABELS = {
     0: "airplane",
@@ -34,7 +33,7 @@ def generate_points(n, r1, r2):
 def points_to_data(blue, red):
     X = np.concatenate((blue, red))
     y = np.concatenate((np.full(len(blue), 0), np.full(len(red), 1)))
-    y = np_utils.to_categorical(y)
+    y = to_categorical(y)
     return X, y
 
 
