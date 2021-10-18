@@ -93,4 +93,28 @@ def plot_predictions(model, X_train, Y_train, title="Model predictions"):
     )
     for clazz, color in zip([0, 1], ["blue", "red"]):
         points_idx = np.argmax(Y_train, axis=1) == clazz
-        plt.scatter(X_train[points_idx, 0], X_train[points_idx, 1], color=color, s=3)
+        plt.scatter(X_train[points_idx, 0],
+                    X_train[points_idx, 1], color=color, s=3)
+
+
+def get_best_lr(finder):
+    def valley(lrs: list, losses: list, num_it: int):
+        "Suggests a learning rate from the longest valley and returns its index"
+        n = len(losses)
+        max_start, max_end = 0, 0
+
+        # find the longest valley
+        lds = [1]*n
+        for i in range(1, n):
+            for j in range(0, i):
+                if (losses[i] < losses[j]) and (lds[i] < lds[j] + 1):
+                    lds[i] = lds[j] + 1
+                if lds[max_end] < lds[i]:
+                    max_end = i
+                    max_start = max_end - lds[max_end]
+
+        sections = (max_end - max_start) / 3
+        idx = max_start + int(sections) + int(sections/2)
+
+        return float(lrs[idx]), (float(lrs[idx]), losses[idx])
+    return valley(finder.lrs, finder.losses, len(finder.lrs))[0]
