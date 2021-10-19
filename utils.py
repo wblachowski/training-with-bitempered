@@ -117,4 +117,4 @@ def get_best_lr(finder):
         idx = max_start + int(sections) + int(sections/2)
 
         return float(lrs[idx]), (float(lrs[idx]), losses[idx])
-    return valley(finder.lrs, finder.losses, len(finder.lrs))
+    return valley(finder.lrs, finder.losses, len(finder.lrs))[1]
