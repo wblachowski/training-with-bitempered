@@ -1,3 +1,8 @@
+*.h5
+*.npy
+
+keras_lr_finder/
+loss.py
 __pycache__
 *.py[cod]
 *$py.class
