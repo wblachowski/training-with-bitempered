@@ -83,3 +83,49 @@ def plot_cifar(X, y, size=8):
         plt.title(CIFAR_LABELS[label])
         plt.imshow(im)
     plt.show()
+
+
+def plot_cifar_results(results, title, max_annotations=None):
+    def annotate_max(values, ymin, pos=[0.5, 0.5], color='red'):
+        xmax = np.argmax(values)
+        ymax = max(values)
+        text = "{:.2f}%".format(100*ymax)
+        bbox_props = dict(boxstyle="square,pad=0.3",
+                          fc="w", lw=1., edgecolor=color)
+        xrel = pos[0]*len(values)
+        yrel = pos[1]*(1 - ymin)+ymin
+        angle = "60" if (xmax > xrel and ymax > yrel) or (
+            xmax < xrel and ymax < yrel) else "-60"
+        arrowprops = dict(
+            arrowstyle="->", connectionstyle=f"angle,angleA=0,angleB={angle}", color=color)
+        kw = dict(xycoords='data', textcoords="axes fraction",
+                  arrowprops=arrowprops, bbox=bbox_props, ha='left', va="top")
+        plt.gca().annotate(text, xy=(xmax, ymax), xytext=tuple(pos), **kw)
+    colors = plt.cm.get_cmap('tab10').colors
+    plt.figure(figsize=(15, 6))
+    st = plt.suptitle(title, fontsize=18)
+    plt.subplot(1, 2, 1)
+    ymin = np.array([v['val_accuracy'] for v in results.values()]).min()
+    sorted_keys = sorted(results.keys(), reverse=True)
+    for i, temps in enumerate(sorted_keys):
+        metrics = results[str(temps)]
+        plt.title("Validation accuracy")
+        plt.ylabel("Accuracy")
+        plt.xlabel("Training steps")
+        if max_annotations:
+            annotate_max(metrics['val_accuracy'], ymin,
+                         pos=max_annotations[i], color=colors[i])
+        plt.plot(metrics['val_accuracy'], color=colors[i], label=temps)
+    plt.legend(loc=4)
+    plt.ylim(top=1.)
+    plt.subplot(1, 2, 2)
+    for i, temps in enumerate(sorted_keys):
+        metrics = results[str(temps)]
+        plt.title("Train accuracy")
+        plt.ylabel("Accuracy")
+        plt.xlabel("Training steps")
+        plt.plot(metrics['accuracy'], color=colors[i], label=temps)
+    plt.legend(loc=4)
+    plt.ylim(top=1.)
+    st.set_y(1.06)
+    plt.show()
