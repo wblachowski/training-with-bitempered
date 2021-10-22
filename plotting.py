@@ -71,6 +71,19 @@ def plot_synthetic_results(X_train, y_train, results, title=None):
     plt.show()
 
 
+def plot_lr_finding_results(finders, get_best_lr):
+    plt.figure(figsize=(15, 10))
+    for i, (temps, finder) in enumerate(finders.items()):
+        plt.subplot(2, 2, i+1)
+        lr, loss = get_best_lr(finder)
+        plt.scatter(lr, loss, label=f'Best LR ({round(lr, 4)})')
+        plt.title(f"LR finder losses for {temps}")
+        plt.legend(loc=3)
+        finder.plot_loss()
+    plt.subplots_adjust(wspace=0.2, hspace=0.4)
+    plt.show()
+
+
 def plot_cifar(X, y, size=8):
     plt.figure(figsize=(15, 5))
     y = y.flatten()
