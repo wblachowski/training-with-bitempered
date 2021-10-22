@@ -125,7 +125,7 @@ def plot_cifar_results(results, title, max_annotations=None):
         plt.title("Validation accuracy")
         plt.ylabel("Accuracy")
         plt.xlabel("Training steps")
-        if max_annotations:
+        if max_annotations and len(max_annotations) < i:
             annotate_max(metrics['val_accuracy'], ymin,
                          pos=max_annotations[i], color=colors[i])
         plt.plot(metrics['val_accuracy'], color=colors[i], label=temps)
