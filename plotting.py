@@ -121,7 +121,7 @@ def plot_cifar_results(results, title, max_annotations=None):
     ymin = np.array([v['val_accuracy'] for v in results.values()]).min()
     sorted_keys = sorted(results.keys(), reverse=True)
     for i, temps in enumerate(sorted_keys):
-        metrics = results[str(temps)]
+        metrics = results[temps]
         plt.title("Validation accuracy")
         plt.ylabel("Accuracy")
         plt.xlabel("Training steps")
@@ -133,7 +133,7 @@ def plot_cifar_results(results, title, max_annotations=None):
     plt.ylim(top=1.)
     plt.subplot(1, 2, 2)
     for i, temps in enumerate(sorted_keys):
-        metrics = results[str(temps)]
+        metrics = results[temps]
         plt.title("Train accuracy")
         plt.ylabel("Accuracy")
         plt.xlabel("Training steps")
